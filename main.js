@@ -30,6 +30,35 @@ const init = () => {
   heroElement.textContent = "🐥";
   updateHero();
   container.appendChild(heroElement);
+
+  document.ondblclick = (e) => {
+    e.preventDefault();
+  };
+  let originalX = -1,
+    originalY,
+    originalHeroX,
+    originalHeroY;
+  document.onpointerdown = (e) => {
+    e.preventDefault();
+    originalX = e.pageX;
+    originalY = e.pageY;
+    originalHeroX = heroX;
+    originalHeroY = heroY;
+  };
+  document.onpointermove = (e) => {
+    e.preventDefault();
+    if (originalX !== -1) {
+      heroX = originalHeroX + (e.pageX - originalX) * 1.5;
+      heroY = originalHeroY + (e.pageY - originalY) * 1.5;
+      heroX = Math.max(Math.min(heroX, width - heroSize / 2), heroSize / 2);
+      heroY = Math.max(Math.min(heroY, height - heroSize / 2), heroSize / 2);
+      updateHero();
+    }
+  };
+  document.onpointerup = (e) => {
+    e.preventDefault();
+    originalX = -1;
+  };
 };
 
 window.onload = () => {
