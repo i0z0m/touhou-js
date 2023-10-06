@@ -1,6 +1,7 @@
 const width = 300;
 const height = 450;
 let container = null;
+let gameover = false;
 
 const sleep = (duration) => new Promise((r) => setTimeout(r, duration));
 
@@ -50,6 +51,11 @@ const updateBullet = () => {
       bullet.available = false;
       div.remove();
     }
+
+    const dist = (heroX - x) ** 2 + (heroY - y) ** 2;
+    if (dist < (heroSize * 0.25) ** 2) {
+      gameover = true;
+    }
   }
 };
 
@@ -97,6 +103,9 @@ const init = () => {
     originalHeroY = heroY;
   };
   document.onpointermove = (e) => {
+    if (gameover) {
+      return;
+    }
     e.preventDefault();
     if (originalX !== -1) {
       heroX = originalHeroX + (e.pageX - originalX) * 1.5;
@@ -115,7 +124,7 @@ const init = () => {
 window.onload = async () => {
   init();
   createBullet(0, 5);
-  while (true) {
+  while (!gameover) {
     await sleep(16);
     updateBullet();
     eraseBullet();
