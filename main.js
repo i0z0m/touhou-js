@@ -1,10 +1,47 @@
 const width = 300;
 const height = 450;
+let container = null;
+
+const sleep = (duration) => new Promise((r) => setTimeout(r, duration));
+
 
 let heroElement = null;
 const heroSize = 40;
 let heroX = width / 2;
 let heroY = (height / 4) * 3;
+
+const bulletFromX = width / 2;
+const bulletFromY = width / 10;
+const bulletSize = 10;
+let bulletList = [];
+
+const createBullet = (dx, dy) => {
+  const div = document.createElement("div");
+  container.appendChild(div);
+  div.style.position = "absolute";
+  div.style.width = `${bulletSize}px`;
+  div.style.height = `${bulletSize}px`;
+  div.style.backgroundColor = "#fff";
+  div.style.borderRadius = "50%";
+  bulletList.push({
+    available: true,
+    x: bulletFromX,
+    y: bulletFromY,
+    dx,
+    dy,
+    div
+  });
+};
+
+const updateBullet = () => {
+  for (const bullet of bulletList) {
+    const { x, y, dx, dy, div } = bullet;
+    div.style.left = `${x - bulletSize / 2}px`;
+    div.style.top = `${y - bulletSize / 2}px`;
+    bullet.x += dx;
+    bullet.y += dy;
+  }
+};
 
 const updateHero = () => {
   heroElement.style.left = `${heroX - heroSize / 2}px`;
@@ -61,6 +98,11 @@ const init = () => {
   };
 };
 
-window.onload = () => {
+window.onload = async () => {
   init();
+  createBullet(0, 5);
+  while (true) {
+    await sleep(16);
+    updateBullet();
+  }
 };
