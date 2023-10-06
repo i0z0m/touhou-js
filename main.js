@@ -16,6 +16,67 @@ const bulletFromY = width / 10;
 const bulletSize = 10;
 let bulletList = [];
 
+const bulletManager = async () => {
+  await danmaku1();
+  await sleep(1000);
+  await danmaku2();
+  await sleep(1000);
+  danmaku1();
+  await danmaku2();
+  await sleep(1000);
+  await danmaku3();
+  await sleep(1000);
+  danmaku1();
+  await danmaku3();
+  await sleep(1000);
+  while (!gameover) {
+    danmaku1();
+    danmaku2();
+    await danmaku3();
+    await sleep(1000);
+  }
+};
+
+const danmaku1 = async() => {
+  for (let i = 0; i < 25; i++) {
+    for (let j = 0; j < 16; j++) {
+      const angle = Math.atan2(heroY - bulletFromY, heroX - bulletFromX);
+      const dx = Math.cos(angle + (j * Math.PI) / 8) * 5;
+      const dy = Math.sin(angle + (j * Math.PI) / 8) * 5;
+      createBullet(dx, dy);
+    }
+    await sleep(200);
+  }
+};
+
+const danmaku2 = async () => {
+  for (let i = 0; i < 5; i++) {
+    const angle =
+      Math.atan2(heroY - bulletFromY, heroX - bulletFromX) + Math.PI / 8;
+    for (let k = 0; k < 15; k++) {
+      for (let j = 0; j < 8; j++) {
+        const dx = Math.cos(angle + (j * Math.PI) / 4) * 5;
+        const dy = Math.sin(angle + (j * Math.PI) / 4) * 5;
+        createBullet(dx, dy);
+      }
+      await sleep(50);
+    }
+    await sleep(250);
+  }
+};
+
+const danmaku3 = async () => {
+  for (let i = 0; i < 50; i++) {
+    const angle = (Math.PI * i) / 50;
+    for (let j = 0; j < 8; j++) {
+      const dx = Math.cos(angle + (j * Math.PI) / 4) * 5;
+      const dy = Math.sin(angle + (j * Math.PI) / 4) * 5;
+      createBullet(dx, dy);
+    }
+    await sleep(100);
+  }
+};
+
 const createBullet = (dx, dy) => {
   const div = document.createElement("div");
   container.appendChild(div);
@@ -123,7 +184,7 @@ const init = () => {
 
 window.onload = async () => {
   init();
-  createBullet(0, 5);
+  bulletManager();
   while (!gameover) {
     await sleep(16);
     updateBullet();
