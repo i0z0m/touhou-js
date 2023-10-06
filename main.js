@@ -40,7 +40,21 @@ const updateBullet = () => {
     div.style.top = `${y - bulletSize / 2}px`;
     bullet.x += dx;
     bullet.y += dy;
+
+    if (
+      bullet.x < -bulletSize / 2 ||
+      bullet.x > bulletSize / 2 + width ||
+      bullet.y < -bulletSize / 2 ||
+      bullet.y > bulletSize / 2 + height
+    ) {
+      bullet.available = false;
+      div.remove();
+    }
   }
+};
+
+const eraseBullet = () => {
+  bulletList = bulletList.filter((v) => v.available);
 };
 
 const updateHero = () => {
@@ -104,5 +118,6 @@ window.onload = async () => {
   while (true) {
     await sleep(16);
     updateBullet();
+    eraseBullet();
   }
 };
