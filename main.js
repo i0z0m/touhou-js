@@ -11,8 +11,11 @@ const heroSize = 40;
 let heroX = width / 2;
 let heroY = (height / 4) * 3;
 
-const bulletFromX = width / 2;
-const bulletFromY = width / 10;
+let bossElement = null;
+const bossSize = 40;
+let bossX = width / 2;
+let bossY = width / 10;
+
 const bulletSize = 10;
 let bulletList = [];
 
@@ -40,7 +43,7 @@ const bulletManager = async () => {
 const danmaku1 = async() => {
   for (let i = 0; i < 25; i++) {
     for (let j = 0; j < 16; j++) {
-      const angle = Math.atan2(heroY - bulletFromY, heroX - bulletFromX);
+      const angle = Math.atan2(heroY - bossY, heroX - bossX);
       const dx = Math.cos(angle + (j * Math.PI) / 8) * 5;
       const dy = Math.sin(angle + (j * Math.PI) / 8) * 5;
       createBullet(dx, dy);
@@ -52,7 +55,7 @@ const danmaku1 = async() => {
 const danmaku2 = async () => {
   for (let i = 0; i < 5; i++) {
     const angle =
-      Math.atan2(heroY - bulletFromY, heroX - bulletFromX) + Math.PI / 8;
+      Math.atan2(heroY - bossY, heroX - bossX) + Math.PI / 8;
     for (let k = 0; k < 15; k++) {
       for (let j = 0; j < 8; j++) {
         const dx = Math.cos(angle + (j * Math.PI) / 4) * 5;
@@ -87,8 +90,8 @@ const createBullet = (dx, dy) => {
   div.style.borderRadius = "50%";
   bulletList.push({
     available: true,
-    x: bulletFromX,
-    y: bulletFromY,
+    x: bossX,
+    y: bossY,
     dx,
     dy,
     div
@@ -129,6 +132,11 @@ const updateHero = () => {
   heroElement.style.top = `${heroY - heroSize / 2}px`;
 };
 
+const updateBoss = () => {
+  bossElement.style.left = `${bossX - bossSize / 2}px`;
+  bossElement.style.top = `${bossY - bossSize / 2}px`;
+};
+
 const init = () => {
   container = document.createElement("div");
   container.style.position = "absolute";
@@ -148,6 +156,18 @@ const init = () => {
   heroElement.textContent = "🐥";
   updateHero();
   container.appendChild(heroElement);
+
+  bossElement = document.createElement("div");
+  bossElement.style.position = "absolute";
+  bossElement.style.width = `${bossSize}px`;
+  bossElement.style.height = `${bossSize}px`;
+  bossElement.style.fontSize = `${bossSize * 0.8}px`;
+  heroElement.style.display = "flex";
+  heroElement.style.alignItems = "center";
+  heroElement.style.justifyContent = "center";
+  bossElement.textContent = "🐔";
+  updateBoss();
+  container.appendChild(bossElement);
 
   document.ondblclick = (e) => {
     e.preventDefault();
